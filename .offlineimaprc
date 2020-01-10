@@ -1,0 +1,96 @@
+[general]
+ui=TTYUI
+accounts = Gmail, UoB, UoB-gmail, UWE
+maxsyncaccounts = 4
+pythonfile = ~/.offlineimap.py
+
+[Account Gmail]
+localrepository = Local
+remoterepository = Remote
+synclabels = yes
+labelsheader = X-Keywords
+
+[Account UoB-gmail]
+localrepository = Local-UoB-gmail
+remoterepository = Remote-UoB-gmail
+synclabels = yes
+labelsheader = X-Keywords
+
+[Account UoB]
+localrepository = Local-UoB
+remoterepository = Remote-UoB
+
+[Account UWE]
+localrepository = Local-UWE
+remoterepository = Remote-UWE
+
+[Repository Local]
+type = GmailMaildir
+localfolders = ~/Maildir/gmail
+
+[Repository Remote]
+type = Gmail
+remoteuser = scannell.aidan@gmail.com
+remotepasseval = get_password_emacs("imap.gmail.com", "scannell.aidan@gmail.com", "993")
+sslcacertfile = /usr/local/etc/openssl/cert.pem
+ssl_version = tls1_2
+realdelete = no
+folderfilter = lambda folder: folder.startswith('[Gmail]/') and \
+    folder[8:] in ['All Mail', 'Trash', 'Sent Mail', 'Drafts', 'Spam'] 
+trashfolder = [Gmail]/Trash 
+holdconnectionopen = true
+keepalive = 60
+
+
+[Repository Local-UoB-gmail]
+type = GmailMaildir
+localfolders = ~/Maildir/UoB-gmail
+
+[Repository Remote-UoB-gmail]
+type = Gmail
+remoteuser = as12528@my.bristol.ac.uk
+remotepasseval = get_password_emacs("imap.gmail.com", "as12528@my.bristol.ac.uk", "993")
+sslcacertfile = /usr/local/etc/openssl/cert.pem
+ssl_version = tls1_2
+realdelete = no
+folderfilter = lambda folder: folder.startswith('[Gmail]/') and \
+    folder[8:] in ['All Mail', 'Trash', 'Sent Mail', 'Drafts', 'Spam'] 
+trashfolder = [Gmail]/Trash 
+holdconnectionopen = true
+keepalive = 60
+
+
+[Repository Local-UoB]
+type = Maildir
+localfolders = ~/Maildir/UoB
+
+[Repository Remote-UoB]
+type = IMAP
+remotehost = outlook.office365.com
+remoteuser = as12528@bristol.ac.uk
+remotepasseval = get_password_emacs("outlook.office365.com", "as12528@bristol.ac.uk", "993")
+remoteport = 993
+sslcacertfile = /usr/local/etc/openssl/cert.pem
+ssl_version = tls1_2
+realdelete = no
+folderfilter = lambda folder: folder in [ 'Sent', 'INBOX', 'Archive', 'Drafts']
+holdconnectionopen = true
+keepalive = 60
+
+[Repository Local-UWE]
+type = Maildir
+localfolders = ~/Maildir/UWE
+
+[Repository Remote-UWE]
+type = IMAP
+remotehost = outlook.office365.com
+remoteuser = Aidan2.Scannell@live.uwe.ac.uk
+remotepasseval = get_password_emacs("outlook.office365.com", "Aidan2.Scannell@live.uwe.ac.uk", "993")
+remoteport = 993
+sslcacertfile = /usr/local/etc/openssl/cert.pem
+ssl_version = tls1_2
+realdelete = no
+folderfilter = lambda folder: folder in [ 'Sent', 'INBOX', 'Archive' ]
+
+holdconnectionopen = true
+keepalive = 60
