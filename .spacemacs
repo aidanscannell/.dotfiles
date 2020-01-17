@@ -514,48 +514,61 @@ you should place your code here."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (with-eval-after-load 'org
       (setq org-directory "/Users/aidanscannell/Dropbox/org/")
-      (setq org-agenda-files '("/Users/aidanscannell/Dropbox/org/"))
       (setq org-default-notes-file (concat org-directory "1.todo.org"))
       (setq org-contacts-files '("~/Dropbox/org/contacts.org"))
       (setq org-todo-keywords '((sequence "SOMEDAY" "TODO" "PROGRESS" "|" "DONE" "DELEGATED" "CANCELLED")))
       (setq org-bullets-bullet-list '("■" "◆" "▲" "▶"))
       (setq org-startup-indented t) ;; Keep the indentation well structured
-
-      ;; set the agenda files.
+      (setq org-agenda-files '("/Users/aidanscannell/Dropbox/org/agenda")) ;; set the agenda files.
       ;; (setq org-agenda-files '("/Users/aidanscannell/Dropbox/org/"))
-      ;; (setq org-agenda-files '("/Users/aidanscannell/Dropbox/org/agenda"))
-      ;; (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))
+      (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))
 
-
-      ;; (setq org-capture-templates
-      ;;       `(;; Note the backtick here, it's required so that the defvar based tempaltes will work!
-      ;;         ;;http://comments.gmane.org/gmane.emacs.orgmode/106890
-
-      ;;         ("t" "To-do" entry (file+headline "~/Dropbox/org/inbox.org" "Tasks")
-      ;;          "** TODO %^{Task Description}\nCreated From: %a\n" :clock-in t :clock-resume t :prepend t)
-
-      ;;         ;; ("m" "Meeting" entry (file+headline "~/org/cfengine/cfengine.org" "Meeting Notes")
-      ;;         ;; ,my/org-meeting-template)
-      ;;         ))
-
-      ;; ;; add the per project todo.org files to the agenda
-      ;; (with-eval-after-load 'org-agenda
-      ;;   (require 'org-projectile)
-      ;;   (mapcar '(lambda (file)
-      ;;              (when (file-exists-p file)
-      ;;                (push file org-agenda-files)))
-      ;;           (org-projectile-todo-files)))
+      ;; add the per project todo.org files to the agenda
+      (with-eval-after-load 'org-agenda
+        (require 'org-projectile)
+        (mapcar '(lambda (file)
+                   (when (file-exists-p file)
+                     (push file org-agenda-files)))
+                (org-projectile-todo-files)))
 
       ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
       ;; Org-contacts template
       ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
       (defvar my/org-contacts-template "* %^{Name}
-:PROPERTIES:
-:ADDRESS: %^{Address}
-:BIRTHDAY: %^{dd-mm-yyyy}
-:EMAIL: %^{Email}
-:NOTE: %^{NOTE}
-:END:" "Template for org-contacts.")
+        :PROPERTIES:
+        :ADDRESS: %^{Address}
+        :BIRTHDAY: %^{dd-mm-yyyy}
+        :EMAIL: %^{Email}
+        :NOTE: %^{NOTE}
+        :END:" "Template for org-contacts.")
+
+      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+      ;; Meeting templates
+      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+      (defvar my/org-phd-meeting-template "** %^{meeting name}
+        %^g %? SCHEDULED: %t
+        *Attendees:*
+        - [X] Aidan Scannell
+        - [ ] Arthur Richards
+        - [ ] Carl Henrik
+        *Agenda:*
+        -
+        -
+        *Notes:*
+        " "PhD Meeting Template")
+      (defvar my/org-meeting-template "** %^{meeting name}
+        %^g
+        %?
+        SCHEDULED: %t
+        *Attendees:*
+        - [X] Aidan Scannell
+        - [ ]
+        *Agenda:*
+        -
+        -
+        *Notes:*
+        " "Meeting Template")
+
 
       ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
       ;; Org-capture templates
@@ -566,44 +579,71 @@ you should place your code here."
           ("f" "Contact - Friends & Family" entry (file+headline "~/Dropbox/org/contacts.org" "Friends & Family"), my/org-contacts-template)
           ("p" "Contact - People" entry (file+headline "~/Dropbox/org/contacts.org" "People"), my/org-contacts-template)
 
-          ("t" "To-do" entry (file+headline "~/Dropbox/org/inbox.org" "Tasks")
-          "** TODO %^{Task Description}\nCreated From: %a\n" :clock-in t :clock-resume t :prepend t)
+          ;; ("mp" "PhD Meeting" entry (file+headline "~/Dropbox/org/agenda/calendar.org" "Meetings"), my/org-phd-meeting-template)
+          ;; ("m" "Calendar" entry (file+headline "~/Dropbox/org/agenda/calendar.org" "Meetings"),)
+          ;; ("s" "Scheduled TODO" entry (file+headline as/gtd "Collect")
+          ;; "* TODO %? %^G \nSCHEDULED: %^t\n  %U" :empty-lines 1)
+
+          ("m" "Schedule Meeting" entry (file+headline "~/Dropbox/org/agenda/calendar.org" "Meetings"), my/org-meeting-template)
+          ("d" "Deadline" entry (file+headline "~/Dropbox/org/agenda/calendar.org" "Deadlines")
+           "** %^{deadline name}\n %^g %? \n SCHEDULED: %t \n DEADLINE: %t")
+          ("e" "Schedule Event" entry (file+headline "~/Dropbox/org/agenda/calendar.org" "Event")
+           "** %^{event name}\n %^g %? \n SCHEDULED: %t")
+
+          ("M" "Schedule PhD Meeting" entry (file+headline "~/Dropbox/org/agenda/uni.org" "Meetings"), my/org-phd-meeting-template)
+          ("D" "Deadline" entry (file+headline "~/Dropbox/org/agenda/uni.org" "Deadlines")
+           "** %^{deadline name}\n %^g %? \n SCHEDULED: %t \n DEADLINE: %t")
+          ("E" "Schedule PhD Event" entry (file+headline "~/Dropbox/org/agenda/uni.org" "Event")
+           "** %^{event name}\n %^g %? \n SCHEDULED: %t")
+
+          ;; ("p" "Pick a file" entry (file+function "~/Dropbox/org/notes/ideas.org" org-ask-location))
+          ("n" "Note" entry (file "~/Dropbox/org/notes/ideas.org"), "** %^{Note...}")
+
+          ;; ("t" "To-do" entry (file+headline "~/Dropbox/org/inbox.org" "Tasks")
+          ;; "** TODO %^{Task Description}\nCreated From: %a\n" :clock-in t :clock-resume t :prepend t)
 
           ;; ("l" "Link" "* TODO %a %? %^G\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n")
           )
         )
 
+        ;; Populates only the EXPORT_FILE_NAME property in the inserted headline.
+        (defun org-hugo-new-subtree-post-capture-template ()
+          "Returns `org-capture' template string for new Hugo post.
+      See `org-capture-templates' for more information."
+          (let* ((title (read-from-minibuffer "Post Title: ")) ;Prompt to enter the post title
+                (fname (org-hugo-slug title)))
+            (mapconcat #'identity
+                      `(
+                        ,(concat "* TODO " title)
+                        ":PROPERTIES:"
+                        ":EXPORT_FILE_NAME: index.md"
+                        ,(concat ":EXPORT_HUGO_BUNDLE: " fname)
+                        ":EXPORT_AUTHOR: Aidan Scannell"
+                        ":END:"
+
+                        ;; ,(concat "#+title: " title)
+                        ;; "#+hugo_auto_set_lastmod: t"
+                        "#+hugo_tags: machine-learning"
+                        "#+hugo_categories: "
+                        "%?\n")          ;Place the cursor here finally
+                      "\n")))
+
+        (add-to-list 'org-capture-templates
+                    '("h"                ;`org-capture' binding + h
+                      "Hugo post"
+                      entry
+                      ;; It is assumed that below file is present in `org-directory'
+                      ;; and that it has a "Blog Ideas" heading. It can even be a
+                      ;; symlink pointing to the actual location of all-posts.org!
+                      (file+olp "all-posts.org" "Blog Ideas")
+                      (function org-hugo-new-subtree-post-capture-template)))
+
       ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
       ;; Org-projectile config and templates
       ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
       ;; create org capture template for linking todo to source code
-      ;; (push (org-projectile-project-todo-entry :capture-template "* TODO %?\n %i\n %t\n %a" :capture-heading "Create linked org-projectile TODO"  :capture-character "l") org-capture-templates)
+      (push (org-projectile-project-todo-entry :capture-template "* TODO %?\n %i\n %t\n %a" :capture-heading "Create linked org-projectile TODO"  :capture-character "l") org-capture-templates)
       ;; (push (org-projectile-project-todo-entry) org-capture-templates)
-
-      ;; I picked up this neat trick from the Venerable Sacha Chua
-      (defvar my/org-meeting-template "** Meeting about %^{something}
-        SCHEDULED: %<%Y-%m-%d %H:%M>
-        *Attendees:*
-        - [X] Aidan Scannell
-        - [ ] %?
-        *Agenda:*
-        -
-        -
-        *Notes:*
-        " "Meeting Template")
-
-
-      ;; ;; Configure custom capture templates
-      ;; (setq org-capture-templates
-      ;;       `(;; Note the backtick here, it's required so that the defvar based tempaltes will work!
-      ;;         ;;http://comments.gmane.org/gmane.emacs.orgmode/106890
-
-      ;;         ("t" "To-do" entry (file+headline "~/Dropbox/org/inbox.org" "Tasks")
-      ;;         "** TODO %^{Task Description}\nCreated From: %a\n" :clock-in t :clock-resume t :prepend t)
-
-      ;;         ;; ("m" "Meeting" entry (file+headline "~/org/cfengine/cfengine.org" "Meeting Notes")
-      ;;         ;; ,my/org-meeting-template)
-      ;;         ))
 
       ;; (setq org-capture-templates
       ;;       '(
@@ -667,28 +707,7 @@ you should place your code here."
     ;;     - State \"TODO\"       from \"\"           %U
     ;;     :END:" :empty-lines 1)
 
-            ;;   )
-            ;; )
-
   )
-
-
-
-  ;; (setq org-reveal-root "file:///~/reveal.js")
-
-  ;; (require 'noflet)
-
-  ;; Configure custom capture templates
-  ;; (setq org-capture-templates
-  ;;       `(;; Note the backtick here, it's required so that the defvar based tempaltes will work!
-  ;;         ;;http://comments.gmane.org/gmane.emacs.orgmode/106890
-
-  ;;         ("t" "To-do" entry (file+headline "~/org/main.org" "Tasks")
-  ;;          "** TODO %^{Task Description}\nCreated From: %a\n" :clock-in t :clock-resume t :prepend t)
-
-  ;;         ("m" "Meeting" entry (file+headline "~/org/cfengine/cfengine.org" "Meeting Notes")
-  ;;          ,my/org-meeting-template)
-  ;;         ))
 
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -801,7 +820,7 @@ you should place your code here."
   ;;       smtpmail-auth-credentials (expand-file-name "~/.authinfo.gpg")
   ;;       smtpmail-debug-info t)
 
-  )
+)
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
@@ -827,5 +846,24 @@ you should place your code here."
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
+ '(evil-want-Y-yank-to-eol nil)
+ '(org-agenda-files
+   (quote
+    ("~/Developer/python-projects/BMNSVGP/TODOs.org" "~/aidanscannell.github.io/TODOs.org" "/Users/aidanscannell/Dropbox/org/agenda/calendar.org" "/Users/aidanscannell/Dropbox/org/agenda/routine.org" "/Users/aidanscannell/Dropbox/org/agenda/uni.org" "~/aidanscannell.github.io/TODOs.org" "~/Developer/python-projects/BMNSVGP/TODOs.org")))
+ '(package-selected-packages
+   (quote
+    (yasnippet-snippets org-projectile org-category-capture org-present org-pomodoro org-mime org-download htmlize gnuplot ein skewer-mode polymode deferred websocket js2-mode simple-httpd shx reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help mu4e-maildirs-extension mu4e-alert ht alert log4e gntp ranger company-auctex auctex company-quickhelp mmm-mode markdown-toc markdown-mode git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck diff-hl auto-dictionary yapfify smeargle pyvenv pytest pyenv-mode py-isort pip-requirements orgit magit-gitflow magit-popup live-py-mode hy-mode dash-functional helm-pydoc helm-gitignore gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit transient git-commit with-editor cython-mode company-anaconda anaconda-mode pythonic ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint -guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio fuzzy flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish define-word company-statistics column-enforce-mode clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
 )
