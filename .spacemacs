@@ -494,9 +494,16 @@ you should place your code here."
         (lambda (fpath)
           (start-process "open" "*open*" "open" fpath)))
 
+  (defun build-resume ()
+  "This functions builds resume.json and outputs it in html format in websites static dir"
+  (interactive)
+  (shell-command "hackmyresume build resume_html.json TO ../static/resume.html -t node_modules/jsonresume-theme-stackoverflow")
+  )
 
   (spacemacs/set-leader-keys
+    "ob" 'build-resume
     "oc" 'org-capture
+    "oh" 'org-hugo-export-subtree
     "oa" 'org-agenda
     "op" 'org-contacts
     "os" 'org-save-all-org-buffers
