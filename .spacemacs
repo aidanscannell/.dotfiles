@@ -429,6 +429,28 @@ you should place your code here."
 
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; org-capture from anywhere config
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (defadvice org-switch-to-buffer-other-window
+      (after supress-window-splitting activate)
+    "Delete the extra window if we're in a capture frame"
+    (if (equal "capture" (frame-parameter nil 'name))
+        (delete-other-windows)))
+
+  (defadvice org-capture-finalize
+      (after delete-capture-frame activate)
+    "Advise capture-finalize to close the frame"
+    (if (equal "capture" (frame-parameter nil 'name))
+        (delete-frame)))
+
+  (defun activate-capture-frame ()
+    "run org-capture in capture frame"
+    (select-frame-by-name "capture")
+    (switch-to-buffer (get-buffer-create "*scratch*"))
+    (org-capture))
+
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Sphinx doc config
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; (setq rst-sphinx-target-parent "~/PycharmProjects/BMSMGP")
@@ -597,7 +619,7 @@ you should place your code here."
            "** %^{event name}\n %^g %? \n SCHEDULED: %t")
 
           ;; ("p" "Pick a file" entry (file+function "~/Dropbox/org/notes/ideas.org" org-ask-location))
-          ("n" "Note" entry (file "~/Dropbox/org/notes/ideas.org"), "** %^{Note...}")
+          ("n" "Note" entry (file "~/Dropbox/org/notes.org"), "** %^{Note...}")
 
           ;; ("t" "To-do" entry (file+headline "~/Dropbox/org/inbox.org" "Tasks")
           ;; "** TODO %^{Task Description}\nCreated From: %a\n" :clock-in t :clock-resume t :prepend t)
