@@ -85,14 +85,14 @@ values."
      bibtex ;; org-ref is inside bibtex layer
      pdf
 
-     ;; org config
-     (org :variables
-          org-want-todo-bindings t
-          ;; org-projectile-file "/Users/aidanscannell/Dropbox/org/project-todo.org"
-          org-projectile-file "TODOs.org"
-          org-enable-sticky-header t
-          org-enable-hugo-support t
-          org-enable-reveal-js-support t)
+     ;; ;; org config
+     ;; (org :variables
+     ;;      org-want-todo-bindings t
+     ;;      ;; org-projectile-file "/Users/aidanscannell/Dropbox/org/project-todo.org"
+     ;;      org-projectile-file "TODOs.org"
+     ;;      org-enable-sticky-header t
+     ;;      org-enable-hugo-support t
+     ;;      org-enable-reveal-js-support t)
 
      ;; email config
      mail
@@ -127,7 +127,7 @@ values."
      csv
      ;; slack
      as-general
-     as-org
+     ;; as-org
      ;; ibuffer
      ;; (ibuffer :variables ibuffer-group-buffers-by 'projects)
      (colors :variables
