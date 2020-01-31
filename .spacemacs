@@ -401,9 +401,6 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-  (setq mu4e-enable-notifications t)
-  (setq mu4e-enable-mode-line t)
-  ;; (add-hook 'org-mode-hook #'my-org-latex-yas)
   )
 
 (defun dotspacemacs/user-config ()
