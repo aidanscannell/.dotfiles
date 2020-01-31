@@ -504,6 +504,12 @@ you should place your code here."
         (lambda (fpath)
           (start-process "open" "*open*" "open" fpath)))
 
+  ;; (add-hook 'LaTeX-mode-hook (lambda ()
+  ;;                              (push
+  ;;                               '("Make" "latexmk -outdir=./tex %t" TeX-run-TeX nil t
+  ;;                                 :help "Make pdf output using latexmk.")
+  ;;                               TeX-command-list)))
+
   (defun build-resume ()
   "This functions builds resume.json and outputs it in html format in websites static dir"
   (interactive)
