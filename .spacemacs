@@ -413,7 +413,11 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-  (setq vc-follow-symlinks t)
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; misc
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (server-start) ;; start emacsclient daemon
+  (setq vc-follow-symlinks t)  ;; allow magit to follow symlinks
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Hack to fix python venv issue with too many open files
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -428,24 +432,6 @@ you should place your code here."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; org-capture from anywhere config
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (server-start)
-  (defadvice org-switch-to-buffer-other-window
-      (after supress-window-splitting activate)
-    "Delete the extra window if we're in a capture frame"
-    (if (equal "capture" (frame-parameter nil 'name))
-        (delete-other-windows)))
-
-  (defadvice org-capture-finalize
-      (after delete-capture-frame activate)
-    "Advise capture-finalize to close the frame"
-    (if (equal "capture" (frame-parameter nil 'name))
-        (delete-frame)))
-
-  (defun activate-capture-frame ()
-    "run org-capture in capture frame"
-    (select-frame-by-name "capture")
-    (switch-to-buffer (get-buffer-create "*scratch*"))
-    (org-capture))
 
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
