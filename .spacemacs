@@ -780,7 +780,7 @@ you should place your code here."
   ;; (setq mail-user-agent 'mu4e-user-agent)
   (setq mu4e-enable-notifications t)
   (with-eval-after-load 'mu4e-alert
-    Enable Desktop notifications
+  ;; Enable Desktop notifications
   (mu4e-alert-set-default-style 'notifier))   ; For Mac OSX (through the terminal notifier app)
   ;; (mu4e-alert-set-default-style 'growl))      ; Alternative for Mac OSX
   (setq mu4e-get-mail-command "offlineimap"
