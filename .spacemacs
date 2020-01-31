@@ -548,10 +548,11 @@ you should place your code here."
       ;; add the per project todo.org files to the agenda
       (with-eval-after-load 'org-agenda
         (require 'org-projectile)
-        (mapcar '(lambda (file)
+        (mapcar '(custom-set-variables
+                  (lambda (file)
                    (when (file-exists-p file)
                      (push file org-agenda-files)))
-                (org-projectile-todo-files)))
+                (org-projectile-todo-files))))
 
       ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
       ;; Org-contacts template
