@@ -425,10 +425,17 @@ you should place your code here."
     (setenv "VIRTUAL_ENV"))
   (advice-add 'pyenv-mode-unset :after 'pyenv-venv-wrapper-deact)
 
-
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; org-capture from anywhere config
+  ;; Slack config
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; (slack-register-team
+  ;;  :name "emacs-slack"
+  ;;  :default t
+  ;;  :client-id "aidan.scannell@bristol.ac.uk"
+  ;;  :client-secret ""
+  ;;  :token ""
+  ;;  :subscribed-channels '(general slackbot mml-book random interesting-papers))
+  ;; (advice-add 'slack-counts-update :override #'ignore)
 
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
