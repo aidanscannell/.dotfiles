@@ -95,15 +95,7 @@ values."
           org-enable-reveal-js-support t)
 
      ;; email config
-     (mu4e :variables
-           ;; mu4e-installation-p ath "/usr/local/Cellar/mu/1.2.0_1/share/emacs/site-lisp"
-           mu4e-view-show-images t
-           mu4e-view-show-addresses t
-           mu4e-account-alist t
-           mu4e-enable-notifications t
-           mu4e-enable-mode-line t
-           mu4e-use-maildirs-extension t
-           mu4e-enable-async-operations t)
+     mail
 
      ;; shell config
      (shell :variables
@@ -133,6 +125,11 @@ values."
 
      ;; extras
      csv
+     ;; slack
+     as-general
+     as-org
+     ;; ibuffer
+     ;; (ibuffer :variables ibuffer-group-buffers-by 'projects)
      (colors :variables
              colors-colorize-identifiers 'variables)
      emoji)
