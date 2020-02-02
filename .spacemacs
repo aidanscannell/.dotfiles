@@ -127,7 +127,9 @@ values."
      csv
      ;; slack
      as-general
-     ;; as-org
+     as-org
+     media
+     ;; spot4e
      ;; ibuffer
      ;; (ibuffer :variables ibuffer-group-buffers-by 'projects)
      (colors :variables
@@ -410,6 +412,16 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  ;; (setq default-major-mode 'C-M-m)
+  ;; (add-to-list 'load-path "~/.emacs.d/private/spot4e.el")
+  ;; (push "~/.emacs.d/private" load-path)
+  ;; (load-file "~/.emacs.d/private/spot4e.el")
+  (add-to-list 'load-path "~/.emacs.d/private/spot4e")
+  (require 'spot4e)
+  (setq spot4e-refresh-token "AQAtl9XqIxQ0AC-qZTVwzoE_GckNPioln90GBeYITl0nVvSJKj1DlwWYM0jBpVVHgtYiSwLjwClRMgB7_DPb53_KYtezojqeB3SddvwudskJIqGj6Bbe8LqB6w0aZuzcog2aGueGN1ZDCWjY_v8iMEsLN2fGBI9nR8J-pOi90ZunEu6UcpOghjlro3laA0FQ-1ouE7jWEr74zw2FLgMXkK3NIi-3NGXsnDlpvTeNsr6qC8S-rl_Am3lfQZdvipFAHwaG5qBDbEnFI8t2XtTuUpuDGVuscWzFUkZZqY4Pg0KeRMkuA6g5zLTREviR65XKvCUcm-j8ZX8L0x2lIrOe-mOM02BQHLsaQhsLERsaPf2egaXgRGJcyzt85A0EYSrOCsYjsO4eeHB4Z1WSfxXx10VCV_pMN_4cfProWekmiABuPT6heGiXWnv4UQJctqZvnIwavwruBg2L_3gWZKbuWUGNo6100gyS-GViPzHNwLWqdAs8")
+  ;; (setq emms-source-file-default-directory "~/Music/iTunes/iTunes Media/Music")
+
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; misc
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
