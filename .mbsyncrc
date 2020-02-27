@@ -1,0 +1,119 @@
+IMAPStore gmail-remote
+Host imap.gmail.com
+Port  993
+User scannell.aidan@gmail.com
+PassCmd "security find-internet-password -s 'imap.gmail.com' -a 'scannell.aidan@gmail.com' -w"
+#PassCmd "pass mutt-wizard-gmail"
+SSLType IMAPS
+AuthMech LOGIN
+CertificateFile /etc/ssl/cert.pem
+
+MaildirStore gmail-local
+Subfolders Verbatim
+Path ~/.local/share/mail/gmail/
+Inbox ~/.local/share/mail/gmail/INBOX
+Flatten .
+
+Channel gmail
+Expunge Both
+Master :gmail-remote:
+Slave :gmail-local:
+#Patterns "[Gmail].Sent\ Mail" "[Gmail].Drafts" "[Gmail].Trash" "INBOX"
+Patterns * !"[Gmail]/All Mail"
+Create Both
+SyncState *
+MaxMessages 0
+ExpireUnread no
+# End profile
+
+
+IMAPStore uob-gmail-remote
+Host imap.gmail.com
+Port  993
+User as12528@my.bristol.ac.uk
+PassCmd "security find-internet-password -s 'imap.gmail.com' -a 'as12528@my.bristol.ac.uk' -w"
+#PassCmd "pass mutt-wizard-uob-gmail `security find-generic-password -a aidanscannell -s offlineimap -w`"
+#PassCmd "pass mutt-wizard-uob-gmail"
+SSLType IMAPS
+AuthMech LOGIN
+CertificateFile /etc/ssl/cert.pem
+
+MaildirStore uob-gmail-local
+Subfolders Verbatim
+Path ~/.local/share/mail/uob-gmail/
+Inbox ~/.local/share/mail/uob-gmail/INBOX
+Flatten .
+
+Channel uob-gmail
+Expunge Both
+Master :uob-gmail-remote:
+Slave :uob-gmail-local:
+#Patterns "[Gmail].Sent\ Mail" "[Gmail].Drafts" "[Gmail].Trash" "INBOX"
+Patterns * !"[Gmail]/All Mail"
+Create Both
+SyncState *
+MaxMessages 0
+ExpireUnread no
+# End profile
+
+IMAPStore uob-remote
+Host outlook.office365.com
+Port  993
+User as12528@bristol.ac.uk
+PassCmd "security find-internet-password -s 'imap.bristol.ac.uk' -a 'as12528@bristol.ac.uk' -w"
+#PassCmd "pass mutt-wizard-uob `security find-generic-password -a aidanscannell -s offlineimap -w`"
+#PassCmd "pass mutt-wizard-uob"
+SSLType IMAPS
+AuthMech LOGIN
+CertificateFile /etc/ssl/cert.pem
+
+MaildirStore uob-local
+Subfolders Verbatim
+Path ~/.local/share/mail/uob/
+Inbox ~/.local/share/mail/uob/INBOX
+Flatten .
+
+Channel uob
+Expunge Both
+Master :uob-remote:
+Slave :uob-local:
+#Patterns "INBOX" "Sent\ Items" "Trash" "Drafts"
+Patterns * !"[Gmail]/All Mail"
+Create Both
+SyncState *
+MaxMessages 0
+ExpireUnread no
+# End profile
+
+IMAPStore yahoo-remote
+Host imap.mail.yahoo.com
+Port  993
+User aidanscannell@btinternet.com
+#PassCmd "pass mutt-wizard-yahoo `security find-generic-password -a aidanscannell -s offlineimap -w`"
+PassCmd "security find-internet-password -s 'imap.mail.yahoo.com' -a 'aidanscannell@btinternet.com' -w"
+#PassCmd "pass mutt-wizard-yahoo"
+SSLType IMAPS
+AuthMech LOGIN
+CertificateFile /etc/ssl/cert.pem
+
+MaildirStore yahoo-local
+Subfolders Verbatim
+Path ~/.local/share/mail/yahoo/
+Inbox ~/.local/share/mail/yahoo/INBOX
+Flatten .
+
+Channel yahoo
+Expunge Both
+Master :yahoo-remote:
+Slave :yahoo-local:
+Patterns "Inbox" "Sent" "Drafts" "Trash"
+#Patterns * !"[Gmail]/All Mail"
+Create Both
+SyncState *
+MaxMessages 0
+ExpireUnread no
+# End profile
+
+
+
+

@@ -73,19 +73,21 @@ values."
              python-formatter 'yapf
              python-format-on-save t
              ;;         python-test-runner '(pytest nose)
-             python-sort-imports-on-save t)
+             python-sort-imports-on-save nil)
      ;; ipython-notebook  ;; org-capture fails when this layer is activated
      ;; sphinx
      ;; restructuredtext
 
      ;; latex config
+     ;; (setq org-latex-pdf-process (list "LaTeX -shell-escape -bibtex -f -pdf %f"))
      (latex :variables
-            latex-build-command "LaTeX"
+            ;; latex-build-command "LaTeX"
+            ;; latex-build-command "LaTeX -shell-escape -bibtex -f -pdf %f"
             latex-enable-auto-fill t
-            latex-enable-folding t
-            latex-enable-magic t)
+            latex-enable-folding t)
+            ;; latex-enable-magic t)
      bibtex ;; org-ref is inside bibtex layer
-     pdf
+     ;; pdf
 
      ;; ;; org config
      ;; (org :variables
@@ -98,8 +100,7 @@ values."
 
      ;; email config
      mail
-
-     ;; shell config
+;; shell config
      (shell :variables
             shell-default-shell 'multi-term
             shell-default-term-shell "/bin/zsh"
@@ -130,7 +131,7 @@ values."
      ;; slack
      as-general
      as-org
-     media
+     ;; media
      ;; spot4e
      ;; ibuffer
      ;; (ibuffer :variables ibuffer-group-buffers-by 'projects)
@@ -318,14 +319,14 @@ values."
    dotspacemacs-loading-progress-bar t
    ;; If non nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
-   dotspacemacs-fullscreen-at-startup t
+   dotspacemacs-fullscreen-at-startup nil
    ;; If non nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
    dotspacemacs-fullscreen-use-non-native nil
    ;; If non nil the frame is maximized when Emacs starts up.
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
    ;; (default nil) (Emacs 24.4+ only)
-   dotspacemacs-maximized-at-startup nil
+   dotspacemacs-maximized-at-startup t
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
@@ -414,6 +415,34 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  ;; (require 'ox-reveal)
+  ;; (setq org-reveal-root "file:///Users/aidanscannell/reveal.js")
+  (add-to-list 'load-path "~/.emacs.d/private/org-reveal")
+  (require 'ox-reveal)
+  ;; (setq org-reveal-root "~/reveal.js")
+  (setq org-reveal-root "https://revealjs.com/")
+  ;; (setq org-reveal-root "file:///Users/aidanscannell/reveal.js")
+
+
+
+  ;; (TeX-source-correlate-mode)        ; activate forward/reverse search
+  ;; (TeX-PDF-mode)
+  ;; (add-to-list 'TeX-view-program-list '("zathura" zathura-forward-search))
+  ;; (setq TeX-view-program-selection (quote ((output-pdf "zathura") (output-dvi "xdvi"))))
+
+  ;; (add-to-list 'TeX-view-program-selection
+  ;;              '(output-pdf "Zathura"))
+
+  ;; (add-hook 'doc-view-mode-hook 'auto-revert-mode)
+  ;; (add-to-list 'TeX-view-program-list
+  ;;              '("Zathura"
+  ;;                ("zathura "
+  ;;                 (mode-io-correlate " --synctex-forward %n:0:%b -x \"emacsclient +%{line} %{input}\" ")
+  ;;                 " %o")
+  ;;                "zathura"))
+  ;; (add-to-list 'TeX-view-program-selection
+  ;;              '(output-pdf "Zathura"))
+
   ;; (setq default-major-mode 'C-M-m)
   ;; (add-to-list 'load-path "~/.emacs.d/private/spot4e.el")
   ;; (push "~/.emacs.d/private" load-path)
@@ -508,16 +537,25 @@ you should place your code here."
   (setq org-ref-bibliography-notes "~/Dropbox/org/ref/notes.org"
         org-ref-default-bibliography '("~/Dropbox/org/ref/master.bib")
         org-ref-pdf-directory "~/Dropbox/org/ref/pdfs/")
+  (setq org-ref-open-pdf-function
+        (lambda (fpath)
+          (start-process "zathura" "*helm-bibtex-zathura*" "/usr/local/bin/zathura" fpath)))
+
   (setq bibtex-completion-bibliography "~/Dropbox/org/ref/master.bib"
         bibtex-completion-library-path "~/Dropbox/org/ref/pdfs"
         bibtex-completion-notes-path "~/Dropbox/org/ref/helm-bibtex-notes")
-
-  ;; process bibliography when building LaTeX files
-  (setq org-latex-pdf-process (list "LaTeX -shell-escape -bibtex -f -pdf %f"))
   ;; open pdf with system pdf viewer (works on mac)
   (setq bibtex-completion-pdf-open-function
         (lambda (fpath)
-          (start-process "open" "*open*" "open" fpath)))
+          (start-process "zathura" "*helm-bibtex-zathura*" "/usr/local/bin/zathura" fpath)))
+        ;; (lambda (fpath)
+        ;;   (start-process "open" "*open*" "open" fpath)))
+
+  (setq org-latex-pdf-process
+        '("latexmk -pdflatex='pdflatex -interaction nonstopmode' -pdf -bibtex -f %f"))
+
+  ;; process bibliography when building LaTeX files
+  ;; (setq org-latex-pdf-process (list "LaTeX -shell-escape -bibtex -f -pdf %f"))
 
   ;; (add-hook 'LaTeX-mode-hook (lambda ()
   ;;                              (push
@@ -598,7 +636,7 @@ This function is called at the very end of Spacemacs initialization."
     ("/Users/aidanscannell/Dropbox/org/agenda/calendar.org" "/Users/aidanscannell/Dropbox/org/agenda/routine.org" "/Users/aidanscannell/Dropbox/org/agenda/uni.org" "~/Developer/python-projects/BMNSVGP/TODOs.org" "~/Developer/web-projects/academic-aidanscannell/TODOs.org" "~/aidanscannell.github.io/TODOs.org")))
  '(package-selected-packages
    (quote
-    (org-cliplink helm-org-rifle helm-org evil-org yasnippet-snippets org-projectile org-category-capture org-present org-pomodoro org-mime org-download htmlize gnuplot ein skewer-mode polymode deferred websocket js2-mode simple-httpd shx reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help mu4e-maildirs-extension mu4e-alert ht alert log4e gntp ranger company-auctex auctex company-quickhelp mmm-mode markdown-toc markdown-mode git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck diff-hl auto-dictionary yapfify smeargle pyvenv pytest pyenv-mode py-isort pip-requirements orgit magit-gitflow magit-popup live-py-mode hy-mode dash-functional helm-pydoc helm-gitignore gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit transient git-commit with-editor cython-mode company-anaconda anaconda-mode pythonic ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint -guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio fuzzy flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish define-word company-statistics column-enforce-mode clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
+    (cdlatex rjsx-mode yasnippet-snippets org-projectile org-category-capture org-present org-pomodoro org-mime org-download htmlize gnuplot ein skewer-mode polymode deferred websocket js2-mode simple-httpd shx reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help mu4e-maildirs-extension mu4e-alert ht alert log4e gntp ranger company-auctex auctex company-quickhelp mmm-mode markdown-toc markdown-mode git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck diff-hl auto-dictionary yapfify smeargle pyvenv pytest pyenv-mode py-isort pip-requirements orgit magit-gitflow magit-popup live-py-mode hy-mode dash-functional helm-pydoc helm-gitignore gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit transient git-commit with-editor cython-mode company-anaconda anaconda-mode pythonic ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint -guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio fuzzy flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish define-word company-statistics column-enforce-mode clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

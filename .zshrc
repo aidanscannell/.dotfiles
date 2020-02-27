@@ -8,9 +8,8 @@ export ZSH="/Users/aidanscannell/.oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-# ZSH_THEME="robbyrussell"
-# ZSH_THEME=powerlevel10k/powerlevel10k
-ZSH_THEME=dracula
+ZSH_THEME="dracula"
+DISPLAY_TIME=1
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -26,7 +25,7 @@ ZSH_THEME=dracula
 # HYPHEN_INSENSITIVE="true"
 
 # Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
+  # DISABLE_AUTO_UPDATE="true"
 
 # Uncomment the following line to automatically update without prompting.
 # DISABLE_UPDATE_PROMPT="true"
@@ -70,7 +69,22 @@ COMPLETION_WAITING_DOTS="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git sublime brew docker fasd gitignore osx pip zsh-autosuggestions zsh-syntax-highlighting wd)
+plugins=(
+  git 
+  brew 
+  docker 
+  fasd 
+  gitignore 
+  osx 
+  pip 
+  zsh-autosuggestions 
+  zsh-syntax-highlighting 
+  wd 
+  virtualenvwrapper 
+  vi-mode
+  python
+  npm
+  github)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -82,11 +96,11 @@ source $ZSH/oh-my-zsh.sh
 # export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='vim'
+else
+  export EDITOR='vim'
+fi
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -97,136 +111,15 @@ source $ZSH/oh-my-zsh.sh
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
+alias zshconfig="mate ~/.zshrc"
+alias ohmyzsh="mate ~/.oh-my-zsh"
 
 # Virtualenvwrapper 
 export WORKON_HOME=$HOME/.virtualenvs
-export PROJECT_HOME=$HOME/OneDrive\ -\ University\ of\ Bristol/PycharmProjects
 source /usr/local/bin/virtualenvwrapper.sh
 
-
-POWERLEVEL9K_MODE='nerdfont-complete'
-
-# Please only use this battery segment if you have material icons in your nerd font (or font)
-# Otherwise, use the font awesome one in "User Segments"
-prompt_zsh_battery_level() {
-  local percentage1=`pmset -g ps  |  sed -n 's/.*[[:blank:]]+*\(.*%\).*/\1/p'`
-  local percentage=`echo "${percentage1//\%}"`
-  local color='%F{red}'
-  local symbol="\uf00d"
-  pmset -g ps | grep "discharging" > /dev/null
-  if [ $? -eq 0 ]; then
-    local charging="false";
-  else
-    local charging="true";
-  fi
-  if [ $percentage -le 20 ]
-  then symbol='\uf579' ; color='%F{red}' ;
-    #10%
-  elif [ $percentage -gt 19 ] && [ $percentage -le 30 ]
-  then symbol="\uf57a" ; color='%F{red}' ;
-    #20%
-  elif [ $percentage -gt 29 ] && [ $percentage -le 40 ]
-  then symbol="\uf57b" ; color='%F{yellow}' ;
-    #35%
-  elif [ $percentage -gt 39 ] && [ $percentage -le 50 ]
-  then symbol="\uf57c" ; color='%F{yellow}' ;
-    #45%
-  elif [ $percentage -gt 49 ] && [ $percentage -le 60 ]
-  then symbol="\uf57d" ; color='%F{blue}' ;
-    #55%
-  elif [ $percentage -gt 59 ] && [ $percentage -le 70 ]
-  then symbol="\uf57e" ; color='%F{blue}' ;
-    #65%
-  elif [ $percentage -gt 69 ] && [ $percentage -le 80 ]
-  then symbol="\uf57f" ; color='%F{blue}' ;
-    #75%
-  elif [ $percentage -gt 79 ] && [ $percentage -le 90 ]
-  then symbol="\uf580" ; color='%F{blue}' ;
-    #85%
-  elif [ $percentage -gt 89 ] && [ $percentage -le 99 ]
-  then symbol="\uf581" ; color='%F{blue}' ;
-    #85%
-  elif [ $percentage -gt 98 ]
-  then symbol="\uf578" ; color='%F{green}' ;
-    #100%
-  fi
-  if [ $charging = "true" ];
-  then color='%F{green}'; if [ $percentage -gt 98 ]; then symbol='\uf584'; fi
-  fi
-  echo -n "%{$color%}$symbol" ;
-}
-
-zsh_internet_signal(){
-  local color
-  local symbol="\uf7ba"
-  if ifconfig en0 | grep inactive &> /dev/null; then
-  color="%F{red}"
-  else
-  color="%F{blue}"
-  fi
-  echo -n "%{$color%}$symbol "
-}
-
-POWERLEVEL9K_PROMPT_ON_NEWLINE=true
-POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
-POWERLEVEL9K_RPROMPT_ON_NEWLINE=true
-POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
-POWERLEVEL9K_SHORTEN_STRATEGY="truncate_beginning"
-POWERLEVEL9K_RVM_BACKGROUND="black"
-POWERLEVEL9K_RVM_FOREGROUND="249"
-POWERLEVEL9K_RVM_VISUAL_IDENTIFIER_COLOR="red"
-POWERLEVEL9K_TIME_BACKGROUND="black"
-POWERLEVEL9K_TIME_FOREGROUND="249"
-POWERLEVEL9K_TIME_FORMAT="\UF43A %D{%I:%M  \UF133  %m.%d.%y}"
-POWERLEVEL9K_RVM_BACKGROUND="black"
-POWERLEVEL9K_RVM_FOREGROUND="249"
-POWERLEVEL9K_RVM_VISUAL_IDENTIFIER_COLOR="red"
-POWERLEVEL9K_STATUS_VERBOSE=false
-POWERLEVEL9K_VCS_CLEAN_FOREGROUND='black'
-POWERLEVEL9K_VCS_CLEAN_BACKGROUND='green'
-POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND='black'
-POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND='yellow'
-POWERLEVEL9K_VCS_MODIFIED_FOREGROUND='white'
-POWERLEVEL9K_VCS_MODIFIED_BACKGROUND='black'
-POWERLEVEL9K_COMMAND_EXECUTION_TIME_BACKGROUND='black'
-POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND='blue'
-POWERLEVEL9K_FOLDER_ICON=''
-POWERLEVEL9K_STATUS_OK_IN_NON_VERBOSE=true
-POWERLEVEL9K_STATUS_VERBOSE=false
-POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD=0
-POWERLEVEL9K_VCS_UNTRACKED_ICON='\u25CF'
-POWERLEVEL9K_VCS_UNSTAGED_ICON='\u00b1'
-POWERLEVEL9K_VCS_INCOMING_CHANGES_ICON='\u2193'
-POWERLEVEL9K_VCS_OUTGOING_CHANGES_ICON='\u2191'
-POWERLEVEL9K_VCS_COMMIT_ICON="\uf417"
-POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX="%F{blue}\u256D\u2500%f"
-POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX="%F{blue}\u2570\uf460%f "
-POWERLEVEL9K_CUSTOM_BATTERY_STATUS="prompt_zsh_battery_level"
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context os_icon custom_internet_signal custom_battery_status_joined ssh root_indicator dir dir_writable vcs)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(command_execution_time  status  time)
-HIST_STAMPS="mm/dd/yyyy"
-DISABLE_UPDATE_PROMPT=true
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/usr/local/Caskroom/miniconda/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/usr/local/Caskroom/miniconda/base/etc/profile.d/conda.sh" ]; then
-        . "/usr/local/Caskroom/miniconda/base/etc/profile.d/conda.sh"
-    else
-        export PATH="/usr/local/Caskroom/miniconda/base/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-
-export PATH="/usr/local/sbin:$PATH"
-
-# Add alias for running git commands in .dotfiles repositories. This can be run from anywhere.
-alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
-
+alias neofetch="neofetch --ascii .config/neofetch/ascii/dr-robot-ascii"
 neofetch
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
