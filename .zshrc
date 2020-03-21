@@ -70,17 +70,17 @@ COMPLETION_WAITING_DOTS="true"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-  git 
-  brew 
-  docker 
-  fasd 
-  gitignore 
-  osx 
-  pip 
-  zsh-autosuggestions 
-  zsh-syntax-highlighting 
-  wd 
-  virtualenvwrapper 
+  git
+  brew
+  docker
+  fasd
+  gitignore
+  osx
+  pip
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+  wd
+  virtualenvwrapper
   vi-mode
   python
   npm
@@ -114,12 +114,35 @@ fi
 alias zshconfig="mate ~/.zshrc"
 alias ohmyzsh="mate ~/.oh-my-zsh"
 
-# Virtualenvwrapper 
+# Virtualenvwrapper
 export WORKON_HOME=$HOME/.virtualenvs
 source /usr/local/bin/virtualenvwrapper.sh
 
+# Make iterm2 pretty with ascii art
 alias neofetch="neofetch --ascii .config/neofetch/ascii/dr-robot-ascii"
 neofetch
 
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+# Configure emacs and emacsclient
+export EMACS_CLIENT='/usr/local/opt/emacs-mac/bin/emacsclient'
+export EMACS_BIN_DIR="/usr/local/opt/emacs-mac/bin"
+alias te="~/.emacs.d/emacs-client-server.sh"
+export EDITOR='open -a /usr/local/opt/emacs-mac/Emacs.app'
 
+# Functions for restarting and stopiing emacs server for emacsclient
+function emrestart {
+    if pgrep "emacs.*daemon" > /dev/null
+    then
+        echo "killing emacs daemon process"
+        $EMACS_BIN_DIR/emacsclient -e "(kill-emacs)"
+    fi
+    launchctl unload "$HOME/Library/LaunchAgents/emacsserver.plist" &&
+        launchctl load "$HOME/Library/LaunchAgents/emacsserver.plist"
+}
+
+function emstop {
+    if pgrep "emacs.*daemon" > /dev/null
+    then
+        echo "killing emacs daemon process"
+        $EMACS_BIN_DIR/emacsclient -e "(kill-emacs)"
+    fi
+}
