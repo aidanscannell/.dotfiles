@@ -1,1 +1,4 @@
 config/msmtp/msmtp.log
+
+*.elc
+*.spacemacs.env
