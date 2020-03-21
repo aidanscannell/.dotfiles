@@ -12,7 +12,9 @@ cmd - g : /Applications/Brave\ Browser.app/Contents/MacOS/Brave\ Browser --singl
 
 # open emacs
 #cmd - m : /Applications/Emacs.app/Contents/MacOS/Emacs --single-instance
-cmd - m : /Applications/Emacs.app/Contents/MacOS/Emacs
+#cmd - m : /Applications/Emacs.app/Contents/MacOS/Emacs
+#cmd - m : /usr/local/bin/emacs
+cmd - m : /usr/local/opt/emacs-mac/Emacs.app/Contents/MacOS/Emacs.sh
 
 # focus window
 alt - h : yabai -m window --focus west
