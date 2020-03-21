@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 # bar settings
-yabai -m config status_bar                   on
+yabai -m config status_bar                   off
 yabai -m config status_bar_text_font         "Helvetica Neue:Bold:12.0"
 yabai -m config status_bar_icon_font         "FontAwesome:Regular:12.0"
 yabai -m config status_bar_background_color  0xff202020
@@ -48,4 +48,17 @@ yabai -m rule --add app=Emacs manage=on
 yabai -m rule --add app=zathura manage=on
 yabai -m rule --add app=Zathura manage=on
 #yabai -m rule --add app=Emacs manage=on space=2
+
+yabai -m signal --add event=space_changed \
+      action="osascript -e 'tell application \"Übersicht\" to refresh widget id \"ayu-nibar-spaces-primary-jsx\"'"
+
+# yabai -m signal --add event=space_changed \
+#     action="osascript -e 'tell application \"Übersicht\" to refresh widget id \"ayu-nibar-spaces-primary-jsx\"'"
+# yabai -m signal --add event=display_changed \
+#     action="osascript -e 'tell application \"Übersicht\" to refresh widget id \"ayu-nibar-spaces-primary-jsx\"'"
+# yabai -m signal --add event=space_changed \
+#     action="osascript -e 'tell application \"Übersicht\" to refresh widget id \"ayu-nibar-spaces-secondary-jsx\"'"
+# yabai -m signal --add event=display_changed \
+#     action="osascript -e 'tell application \"Übersicht\" to refresh widget id \"ayu-nibar-spaces-secondary-jsx\"'"
+
 echo "yabai configuration loaded.."
