@@ -8,6 +8,7 @@ ln -s ~/.dotfiles/.warprc ~/.warprc
 ln -s ~/.dotfiles/.zshenv ~/.zshenv
 ln -s ~/.dotfiles/.zshrc ~/.zshrc
 
+mkdir ~/.config
 mkdir ~/.config/htop
 mkdir ~/.config/msmtp
 mkdir ~/.config/mutt
@@ -17,14 +18,15 @@ mkdir ~/.config/skhd
 mkdir ~/.config/yabai
 mkdir ~/.config/zathura
 
-ln -s ~/.dotfiles/config/htop ~/.config/htop
-ln -s ~/.dotfiles/config/msmtp ~/.config/msmtp
-ln -s ~/.dotfiles/config/mutt ~/.config/mutt
-ln -s ~/.dotfiles/config/neofetch ~/.config/neofetch
-ln -s ~/.dotfiles/config/ranger ~/.config/ranger
-ln -s ~/.dotfiles/config/skhd ~/.config/skhd
-ln -s ~/.dotfiles/config/yabai ~/.config/yabai
-ln -s ~/.dotfiles/config/zathura ~/.config/zathura
+ln -s ~/.dotfiles/config/htop ~/.config
+ln -s ~/.dotfiles/config/msmtp ~/.config
+ln -s ~/.dotfiles/config/mutt ~/.config
+ln -s ~/.dotfiles/config/neofetch ~/.config
+ln -s ~/.dotfiles/config/ranger ~/.config
+ln -s ~/.dotfiles/config/skhd ~/.config
+ln -s ~/.dotfiles/config/yabai ~/.config
+ln -s ~/.dotfiles/config/zathura ~/.config
+
 ln -s ~/.dotfiles/.emacs-profile ~/.emacs-profile
 ln -s ~/.dotfiles/.emacs-profiles.el ~/.emacs-profiles.el
 
