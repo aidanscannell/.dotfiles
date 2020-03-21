@@ -1,4 +1,4 @@
-    ;; -*- mode: emacs-lisp; lexical-binding: t -*-
+;; -*- mode: emacs-lisp; lexical-binding: t -*-
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
@@ -28,11 +28,12 @@ This function should only modify configuration layer settings."
 
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
-   dotspacemacs-configuration-layer-path '("~/.spacemacs-new/layers/")
+   dotspacemacs-configuration-layer-path '("~/.dotfiles/spacemacs-base-new/layers/")
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(html
+   '(react
+     html
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
@@ -76,6 +77,15 @@ This function should only modify configuration layer settings."
      spacemacs-evil
      spacemacs-project
      spacemacs-layouts
+     spacemacs-visual
+     spacemacs-modeline
+     spacemacs-navigation
+     ;; spacemacs-editing
+     ;; spacemacs-defaults
+     ;; spacemacs-editing-visual
+     ;; spacemacs-org
+     ;; spacemacs-purpose
+     ;; spacemacs-visual
 
      ;; python config
      (python :variables
@@ -104,7 +114,11 @@ This function should only modify configuration layer settings."
             latex-enable-folding t)
      ;; latex-enable-magic t)
      bibtex ;; org-ref is inside bibtex layer
-     ;; pdf
+     ;; pdf-tools ;; works on master
+     pdf
+
+     ;; layer for note taking
+     deft
 
      ;; my custom layers
      as-org
@@ -210,7 +224,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil show the version string in the Spacemacs buffer. It will
    ;; appear as (spacemacs version)@(emacs version)
    ;; (default t)
-   dotspacemacs-startup-buffer-show-version t
+   dotspacemacs-startup-buffer-show-version 'nil
 
    ;; Specify the startup banner. Default value is `official', it displays
    ;; the official spacemacs logo. An integer value is the index of text
@@ -218,7 +232,7 @@ It should only modify the values of Spacemacs settings."
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner 'nil
+   dotspacemacs-startup-banner 'random
 
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
@@ -228,6 +242,7 @@ It should only modify the values of Spacemacs settings."
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
    dotspacemacs-startup-lists '((recents . 5)
                                 (projects . 7))
+   ;; dotspacemacs-startup-lists 'nil
 
    ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
@@ -258,6 +273,7 @@ It should only modify the values of Spacemacs settings."
    ;; spaceline theme. Value can be a symbol or list with additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
    dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.5)
+   ;; dotspacemacs-mode-line-theme '(vim-powerline)
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
@@ -353,7 +369,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil a progress bar is displayed when spacemacs is loading. This
    ;; may increase the boot time on some systems and emacs builds, set it to
    ;; nil to boost the loading time. (default t)
-   dotspacemacs-loading-progress-bar t
+   dotspacemacs-loading-progress-bar nil
 
    ;; If non-nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
@@ -392,7 +408,8 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil unicode symbols are displayed in the mode line.
    ;; If you use Emacs as a daemon and wants unicode characters only in GUI set
    ;; the value to quoted `display-graphic-p'. (default t)
-   dotspacemacs-mode-line-unicode-symbols t
+   ;; dotspacemacs-mode-line-unicode-symbols nil
+   dotspacemacs-mode-line-unicode-symbols 'display-graphic-p
 
    ;; If non-nil smooth scrolling (native-scrolling) is enabled. Smooth
    ;; scrolling overrides the default behavior of Emacs which recenters point
@@ -455,10 +472,11 @@ It should only modify the values of Spacemacs settings."
    ;; `dotspacemacs-enable-server' is nil.
    ;; (default nil)
    dotspacemacs-server-socket-dir nil
+   ;; dotspacemacs-server-socket-dir "~/.emacs.d/server"
 
    ;; If non-nil, advise quit functions to keep server open when quitting.
    ;; (default nil)
-   dotspacemacs-persistent-server nil
+   dotspacemacs-persistent-server t
 
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `rg', `ag', `pt', `ack' and `grep'.
@@ -494,7 +512,7 @@ It should only modify the values of Spacemacs settings."
    ;; `trailing' to delete only the whitespace at end of lines, `changed' to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup nil
+   dotspacemacs-whitespace-cleanup 'trailing
 
    ;; Either nil or a number of seconds. If non-nil zone out after the specified
    ;; number of seconds. (default nil)
@@ -503,7 +521,8 @@ It should only modify the values of Spacemacs settings."
    ;; Run `spacemacs/prettify-org-buffer' when
    ;; visiting README.org files of Spacemacs.
    ;; (default nil)
-   dotspacemacs-pretty-docs nil))
+   dotspacemacs-pretty-docs t))
+   ;; dotspacemacs-pretty-docs nil))
 
 (defun dotspacemacs/user-env ()
   "Environment variables setup.
@@ -534,13 +553,21 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+  (setq vc-follow-symlinks t)  ;; allow magit to follow symlinks
   (spacemacs/toggle-transparency)
-  (setq projectile-git-submodule-command nil) ;;hack to fix project layouts
+  ;; (setq projectile-git-submodule-command nil) ;;hack to fix project layouts
+
+  (setq deft-directory "~/Dropbox/org")
+
+  ;; combined with emacs-mac this gives good odf quality for retina display
+  (setq pdf-view-use-scaling t)
+
+  (setq inhibit-startup-screen nil)
 
   ;; (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   ;; (add-to-list 'default-frame-alist '(ns-appearance . light))
 
-  (add-to-list 'load-path "~/.spacemacs-new/private/org-reveal")
+  (add-to-list 'load-path "~/.dotfiles/spacemacs-base-new/private/org-reveal")
   (require 'ox-reveal)
   ;; (setq org-reveal-root "~/reveal.js")
   (setq org-reveal-root "https://revealjs.com/")
@@ -560,6 +587,7 @@ before packages are loaded."
      (emacs-lisp . t)
      (python . t)
      (latex . t)
+     (shell . t)
      ))
 
   (setq org-confirm-babel-evaluate nil)
@@ -585,7 +613,7 @@ before packages are loaded."
   ;; (setq reftex-default-bibliography '("~/Dropbox/library.bib"))
   ;; folder where reftex searches for citations
   (setq reftex-default-bibliography '("~/Dropbox/org/ref/master.bib"))
-  (add-hook 'doc-view-mode-hook 'auto-revert-mode)
+  ;; (add-hook 'doc-view-mode-hook 'auto-revert-mode)
   (setq org-ref-bibliography-notes "~/Dropbox/org/ref/notes.org"
         org-ref-default-bibliography '("~/Dropbox/org/ref/master.bib")
         org-ref-pdf-directory "~/Dropbox/org/ref/pdfs/")
@@ -625,7 +653,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (mmm-mode markdown-toc gh-md web-mode web-beautify tagedit slim-mode scss-mode sass-mode pug-mode prettier-js impatient-mode simple-httpd helm-css-scss haml-mode emmet-mode counsel-css counsel swiper company-web web-completion-data add-node-modules-path org-ref key-chord ivy helm-bibtex parsebib company-reftex company-auctex biblio biblio-core auctex-latexmk auctex toc-org pdf-tools tablist orgit org-projectile org-category-capture org-pomodoro alert log4e gntp org-mime org-download org-cliplink org-bullets htmlize helm-org-rifle helm-org gnuplot evil-org org-plus-contrib xterm-color vterm terminal-here shell-pop multi-term eshell-z eshell-prompt-extras esh-help rainbow-mode rainbow-identifiers color-identifiers-mode yapfify pytest pyenv-mode py-isort pippel pipenv pyvenv pip-requirements lsp-ui lsp-python-ms live-py-mode importmagic epc ctable concurrent deferred helm-pydoc helm-lsp dap-mode lsp-treemacs bui cython-mode company-lsp lsp-mode markdown-mode spinner dash-functional company-anaconda blacken anaconda-mode pythonic treemacs-persp persp-mode eyebrowse treemacs-magit lv smeargle magit-svn magit-section magit-gitflow magit-popup helm-gitignore request helm-git-grep gitignore-templates gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit git-gutter-fringe+ fringe-helper git-gutter+ git-commit with-editor transient browse-at-remote which-key vi-tilde-fringe use-package treemacs-projectile treemacs-evil pcre2el overseer nameless macrostep hybrid-mode helm-xref helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-ls-git helm-flx helm-descbinds helm-ag flycheck-package flycheck-elsa evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu elisp-slime-nav dotenv-mode diminish auto-compile ace-jump-helm-line))))
+    (tide typescript-mode tern rjsx-mode js2-mode js-doc import-js grizzl symon spaceline-all-the-icons all-the-icons memoize spaceline powerline fancy-battery font-lock+ popwin hl-todo fill-column-indicator nyan-mode mmm-mode markdown-toc gh-md web-mode web-beautify tagedit slim-mode scss-mode sass-mode pug-mode prettier-js impatient-mode simple-httpd helm-css-scss haml-mode emmet-mode counsel-css counsel swiper company-web web-completion-data add-node-modules-path org-ref key-chord ivy helm-bibtex parsebib company-reftex company-auctex biblio biblio-core auctex-latexmk auctex toc-org pdf-tools tablist orgit org-projectile org-category-capture org-pomodoro alert log4e gntp org-mime org-download org-cliplink org-bullets htmlize helm-org-rifle helm-org gnuplot evil-org org-plus-contrib xterm-color vterm terminal-here shell-pop multi-term eshell-z eshell-prompt-extras esh-help rainbow-mode rainbow-identifiers color-identifiers-mode yapfify pytest pyenv-mode py-isort pippel pipenv pyvenv pip-requirements lsp-ui lsp-python-ms live-py-mode importmagic epc ctable concurrent deferred helm-pydoc helm-lsp dap-mode lsp-treemacs bui cython-mode company-lsp lsp-mode markdown-mode spinner dash-functional company-anaconda blacken anaconda-mode pythonic treemacs-persp persp-mode eyebrowse treemacs-magit lv smeargle magit-svn magit-section magit-gitflow magit-popup helm-gitignore request helm-git-grep gitignore-templates gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit git-gutter-fringe+ fringe-helper git-gutter+ git-commit with-editor transient browse-at-remote which-key vi-tilde-fringe use-package treemacs-projectile treemacs-evil pcre2el overseer nameless macrostep hybrid-mode helm-xref helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-ls-git helm-flx helm-descbinds helm-ag flycheck-package flycheck-elsa evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu elisp-slime-nav dotenv-mode diminish auto-compile ace-jump-helm-line))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -633,3 +661,17 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  )
 )
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (yapfify xterm-color ws-butler which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toc-org tagedit smeargle slim-mode shell-pop scss-mode sass-mode reveal-in-osx-finder rainbow-mode rainbow-identifiers rainbow-delimiters pyvenv pytest pyenv-mode py-isort pug-mode pip-requirements persp-mode pcre2el pbcopy osx-trash osx-dictionary orgit org-ref pdf-tools key-chord ivy tablist org-projectile org-category-capture org-pomodoro alert log4e gntp org-plus-contrib org-mime org-download org-bullets multi-term move-text mmm-mode markdown-toc markdown-mode magit-gitflow magit-popup macrostep lorem-ipsum livid-mode skewer-mode simple-httpd live-py-mode linum-relative link-hint launchctl json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc indent-guide hydra lv hy-mode hungry-delete htmlize highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-pydoc helm-projectile projectile helm-mode-manager helm-make helm-gitignore request helm-flx flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-bibtex parsebib helm-ag haml-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip flycheck pkg-info epl eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit magit git-commit with-editor transient evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu eshell-z eshell-prompt-extras esh-help emmet-mode elisp-slime-nav diminish deft cython-mode company-web web-completion-data company-tern dash-functional tern company-statistics company-quickhelp pos-tip company-auctex company-anaconda company column-enforce-mode color-identifiers-mode coffee-mode clean-aindent-mode bind-map bind-key biblio biblio-core auto-yasnippet yasnippet auto-highlight-symbol auto-dictionary auto-compile packed auctex-latexmk auctex anaconda-mode pythonic f dash s aggressive-indent adaptive-wrap ace-window ace-jump-helm-line helm avy helm-core async ac-ispell auto-complete popup))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

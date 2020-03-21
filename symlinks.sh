@@ -25,4 +25,8 @@ ln -s ~/.dotfiles/config/ranger ~/.config/ranger
 ln -s ~/.dotfiles/config/skhd ~/.config/skhd
 ln -s ~/.dotfiles/config/yabai ~/.config/yabai
 ln -s ~/.dotfiles/config/zathura ~/.config/zathura
+ln -s ~/.dotfiles/.emacs-profile ~/.emacs-profile
+ln -s ~/.dotfiles/.emacs-profiles.el ~/.emacs-profiles.el
+
+ln -s ~/.dotfiles/chemacs/.emacs ~/.emacs 
 echo 'done'
