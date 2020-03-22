@@ -1,0 +1,161 @@
+* DrRobots .dotfiles 
+
+To setup symlinks on fresh install run the following commands:
+
+#+BEGIN_SRC 
+chmod +x symlinks.sh
+./symlinks.sh
+#+END_SRC
+
+* Config Notes
+** Mac
+*** Emacs
+
+**** Install (with homebrew)
+Some Emacs installs do not work with yabai tiling window manager or support retina pdf quality in PDFView.
+[[https://github.com/railwaycat/homebrew-emacsmacport][Emacs-mac]] does, so lets install it,
+- =brew install emacs-mac --with-no-title-bars=
+Link emacs-mac to =/usr/local/bin/emacs=.
+- =brew link emacs-mac=
+[[https://ylluminarious.github.io/2019/05/23/emacs-mac-port-introduction/][This is a good blog post detailing the perks of using Emacs Mac Port.]]
+
+**** pdf quality 
+Emacs/Emacs-plus install and pdf-tools renders low quality pdfs.
+Use emacs-mac and put this in user-config to fix,
+- =(setq pdf-view-use-scaling t)=
+
+**** Chemacs
+Emacs profile switcher. Makes it easy to run multiple Emacs configs side by side.
+- =~/.emacs-profile= sets the default config to use,
+- =~/.emacs-profiles.el= sets the all of the configs with the path to their directory and config file,
+#+BEGIN_SRC
+(("vanilla" . ((user-emacs-directory . "~/.dotfiles/vanilla-emacs")))
+
+("spacemacs-old-m" . ((user-emacs-directory . "~/spacemacs")
+                 (env . (("SPACEMACSDIR" . "~/.dotfiles/spacemacs-old")))))
+
+("spacemacs-old-d" . ((user-emacs-directory . "~/spacemacs/develop")
+                 (env . (("SPACEMACSDIR" . "~/.dotfiles/spacemacs-old")))))
+
+("spacemacs-master" . ((user-emacs-directory . "~/spacemacs")
+                 (env . (("SPACEMACSDIR" . "~/.dotfiles/spacemacs-base-new")))))
+
+ ("new-config" . ((user-emacs-directory . "~/spacemacs/develop")
+                  (env . (("SPACEMACSDIR" . "~/.dotfiles/spacemacs-base-new"))))))
+#+END_SRC
+
+**** Emacs Server/Client
+
+# #!/bin/bash
+Use =C-c C-v t= on this src block to "tangle" i.e. create file =~/.emacs.d/emacs-client-server.sh=,
+#+BEGIN_SRC bash :tangle ~/.emacs.d/emacs-client-server.sh
+#!/usr/bin/env zsh
+
+BG_RED=`tput setaf 1`
+BG_GREEN=`tput setaf 2`
+BOLD=`tput bold`
+RESET=`tput sgr0`
+
+EMACS_CLIENT='/usr/local/opt/emacs-mac/bin/emacsclient'
+EMACS='/usr/local/opt/emacs-mac/Emacs.app/Contents/MacOS/Emacs.sh'
+EMACS='/usr/local/opt/emacs-mac/Emacs.app'
+
+DEFAULT_EVAL='(switch-to-buffer "*scratch*")'
+DEFAULT_ARGS="-e"
+DEFAULT_ARGS=""
+NO_WAIT='-nw'
+
+function run_client(){
+    if [ $# -ne 0 ]
+    then
+        ${EMACS_CLIENT} ${NO_WAIT} $@
+    else
+        ${EMACS_CLIENT} ${NO_WAIT} ${DEFAULT_ARGS} "${DEFAULT_EVAL}" &> /dev/null
+    fi
+}
+
+echo -e "Checking Emacs server status...\c"
+if pgrep Emacs &> /dev/null
+then
+    echo "${BOLD}${BG_GREEN}Active${RESET}"
+    echo -e "Connecting...\c"
+    run_client $*
+    echo "${BOLD}${BG_GREEN}DONE${RESET}"
+else
+    echo "${BOLD}${BG_RED}Inactive${RESET}"
+    echo -e "Emacs server is starting...\c"
+    open -a ${EMACS}
+    echo "${BOLD}${BG_GREEN}DONE${RESET}"
+
+    echo -e "Trying connecting...\c"
+    until run_client $* &> /dev/null;[ $? -eq 0 ]
+    do
+        sleep 1
+    done
+    echo "${BOLD}${BG_GREEN}DONE${RESET}"
+fi
+#+END_SRC
+
+Lets give it permissions,
+#+BEGIN_SRC bash :results none
+chmod +x ~/.emacs.d/emacs-client-server.sh
+#+END_SRC
+and set an alias =te= "terminal emacs" for emacsclient,
+#+BEGIN_SRC bash :results none
+echo "alias te=\"~/.emacs.d/emacs-client-server.sh\"" >> ~/.zshrc
+#+END_SRC
+
+**** Extra
+
+In =~/.config/skhd/skhdrc= create a keyboard shortcut for GUI Emacs,
+#+BEGIN_SRC 
+cmd - m : /usr/local/bin/emacs
+#+END_SRC
+
+**** Superseded
+I edited the spacemacs "~/.emacs.d/core/core-spacemacs.el"
+#+BEGIN_SRC
+(setq inhibit-startup-screen t)
+(spacemacs-buffer/goto-buffer)
+ 
+to
+
+(setq inhibit-startup-screen nil)
+;; (setq inhibit-startup-screen t)
+;;  (spacemacs-buffer/goto-buffer)
+#+END_SRC
+
+*** spacehammer
+*** Music
+**** ncmpcpp
+**** mpd
+**** mopidy
+*** Mutt
+**** Mutt Wizard
+**** mybsync
+*** ranger
+*** skhd
+
+In =~/.config/skhd/skhdrc= create a keyboard shortcut,
+=cmd - m : /usr/local/bin/emacs=
+
+*** Status bar
+Übersicht with a forked version of [[https://github.com/ryanyz10/ayu-nibar][nibar]].
+- =git clone https://github.com/ryanyz10/ayu-nibar $HOME/Library/Application\ Support/Übersicht/widgets/ayu-nibar=
+- =brew install jq=
+- Installed SF Fonts
+- Had to disabled weather widget and changed.
+#+BEGIN_SRC 
+ yabai -m signal --add event=space_changed \
+    action="osascript -e 'tell application \"Übersicht\" to refresh widget id \"nibar-spaces-primary-jsx\"'" 
+#+END_SRC
+to
+#+BEGIN_SRC 
+ yabai -m signal --add event=space_changed \
+    action="osascript -e 'tell application \"Übersicht\" to refresh widget id \"ayu-nibar-spaces-primary-jsx\"'" 
+#+END_SRC
+
+*** Yabai
+[[https://github.com/koekeishiya/yabai][Yabai]]
+*** ZSH
+**** Oh my ZSH
