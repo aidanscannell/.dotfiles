@@ -557,7 +557,11 @@ before packages are loaded."
   (spacemacs/toggle-transparency)
   ;; (setq projectile-git-submodule-command nil) ;;hack to fix project layouts
 
-  (setq deft-directory "~/Dropbox/org")
+  (setq deft-extension "org")
+  (setq deft-text-mode 'org-mode)
+  ;; (setq deft-directory "~/Dropbox/org")
+  (setq deft-directory "~/.dotfiles")
+  (setq deft-recursive nil)
 
   ;; combined with emacs-mac this gives good odf quality for retina display
   (setq pdf-view-use-scaling t)
