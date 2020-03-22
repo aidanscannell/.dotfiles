@@ -3,3 +3,5 @@ config/msmtp/msmtp.log
 *.elc
 *.spacemacs.env
 *.cache
+
+*spacemacs-old/private/spot4e
