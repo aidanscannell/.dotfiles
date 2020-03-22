@@ -106,7 +106,7 @@ Channel yahoo
 Expunge Both
 Master :yahoo-remote:
 Slave :yahoo-local:
-Patterns "Inbox" "Sent" "Drafts" "Trash"
+Patterns "Inbox" "Sent" "Draft" "Trash"
 #Patterns * !"[Gmail]/All Mail"
 Create Both
 SyncState *
