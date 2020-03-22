@@ -2,3 +2,4 @@ config/msmtp/msmtp.log
 
 *.elc
 *.spacemacs.env
+*.cache
