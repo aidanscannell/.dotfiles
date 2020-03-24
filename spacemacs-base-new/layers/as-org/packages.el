@@ -51,6 +51,22 @@
 
   (with-eval-after-load 'org
 
+
+    (add-to-list 'load-path "~/spacemacs/develop/elpa/26.3/develop/org-re-reveal-20200206.712")
+    ;; (require 'ox-reveal)
+    (require 'ox-re-reveal)
+    (setq org-reveal-root "~/reveal.js")
+    (setq org-re-reveal-root "~/reveal.js/")
+    ;; (setq org-reveal-root "https://revealjs.com/")
+    (defun toggle-org-reveal-export-on-save ()
+      (interactive)
+      (if (memq 'org-reveal-export-to-html after-save-hook)
+          (progn
+            (remove-hook 'after-save-hook 'org-reveal-export-to-html t)
+            (message "Disabled org reveal export to html on save for current buffer..."))
+        (add-hook 'after-save-hook 'org-html-export-to-html nil t)
+        (message "Enabled org reveal export to html on save for current buffer...")))
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Org mode settings
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
