@@ -28,7 +28,8 @@ This function should only modify configuration layer settings."
 
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
-   dotspacemacs-configuration-layer-path '("~/.dotfiles/spacemacs-base-new/layers/")
+   ;; dotspacemacs-configuration-layer-path '("~/.dotfiles/spacemacs-base-new/layers/")
+   dotspacemacs-configuration-layer-path (list (concat dotspacemacs-directory "layers/"))
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
