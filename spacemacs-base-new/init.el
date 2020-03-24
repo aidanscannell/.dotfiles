@@ -478,7 +478,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil, start an Emacs server if one is not already running.
    ;; (default nil)
-   dotspacemacs-enable-server t
+   dotspacemacs-enable-server nil
 
    ;; Set the emacs server socket location.
    ;; If nil, uses whatever the Emacs default is, otherwise a directory path
@@ -490,7 +490,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil, advise quit functions to keep server open when quitting.
    ;; (default nil)
-   dotspacemacs-persistent-server t
+   dotspacemacs-persistent-server nil
 
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `rg', `ag', `pt', `ack' and `grep'.
@@ -576,6 +576,8 @@ before packages are loaded."
   ;; (setq deft-directory "~/Dropbox/org")
   (setq deft-directory "~/.dotfiles")
   (setq deft-recursive nil)
+
+  (server-start)
 
   ;; combined with emacs-mac this gives good odf quality for retina display
   (setq pdf-view-use-scaling t)
