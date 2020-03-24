@@ -82,7 +82,7 @@ This function should only modify configuration layer settings."
      ;; spacemacs-purpose
      ;; spacemacs-visual
 
-     ;; python config
+     ;; Languages
      (python :variables
              python-backend 'lsp
              python-tab-width 4
@@ -91,6 +91,9 @@ This function should only modify configuration layer settings."
              python-format-on-save t
              ;;         python-test-runner '(pytest nose)
              python-sort-imports-on-save nil)
+     emacs-lisp
+     html
+     markdown
      ;; ipython-notebook  ;; org-capture fails when this layer is activated
      ;; sphinx
      ;; restructuredtext
