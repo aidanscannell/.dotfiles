@@ -5,3 +5,4 @@ config/msmtp/msmtp.log
 *.cache
 
 *spacemacs-old/private/spot4e
+*.DS_store
