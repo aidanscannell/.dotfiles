@@ -112,11 +112,21 @@ This function should only modify configuration layer settings."
      ;; pdf-tools ;; works on master
      pdf
 
-     ;; layer for note taking
-     deft
+     ;; Search
+     helm
+     deft ;; layer for note taking
+
+     ;; (templates :variables templates-private-directory "~/.dotfiles/spacemacs-base-new/private/templates")
 
      ;; my custom layers
-     as-org
+     org-config
+     ;; org-zotero-config
+
+     ;; other
+     semantic ;; needed for formatting emacs-lisp
+     osx
+     git
+     ;; version-control
      )
 
    ;; List of additional packages that will be installed without being
