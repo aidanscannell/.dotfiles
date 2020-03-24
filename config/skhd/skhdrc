@@ -6,6 +6,7 @@ cmd - return : ~/Applications/iTerm.app/Contents/MacOS/iTerm2
 # open brave browser
 cmd + shift - return : /Applications/Brave\ Browser.app/Contents/MacOS/Brave\ Browser --single-instance
 cmd - g : /Applications/Brave\ Browser.app/Contents/MacOS/Brave\ Browser --single-instance --incognito
+cmd - i : /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --single-instance --incognito
 
 # open mpv
 #cmd - m : open -na /Applications/mpv.app $(pbpaste)
