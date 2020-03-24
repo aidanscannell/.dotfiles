@@ -50,12 +50,13 @@ This function should only modify configuration layer settings."
      treemacs
 
 
+     ;; Typing related
      (auto-completion :variables
                       auto-completion-enable-help-tooltip t
                       auto-completion-enable-sort-by-usage t
-                      auto-completion-return-key-behavior nil
-                      auto-completion-tab-key-behavior 'complete
-                      auto-completion-private-snippets-directory nil
+                      auto-completion-return-key-behavior 'complete
+                      auto-completion-tab-key-behavior 'cycle
+                      auto-completion-private-snippets-directory (concat dotspacemacs-directory "/private/snippets")
                       auto-completion-enable-snippets-in-popup t)
      ;; (spell-checking :variables
      ;;                 random               enable-flyspell-auto-completion t) ;; enabling this layer causes spacemacs to sometime freeze
