@@ -96,11 +96,11 @@ source $ZSH/oh-my-zsh.sh
 # export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='vim'
-else
-  export EDITOR='vim'
-fi
+#if [[ -n $SSH_CONNECTION ]]; then
+#  export EDITOR='vim'
+#else
+#  export EDITOR='vim'
+#fi
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -123,10 +123,20 @@ alias neofetch="neofetch --ascii .config/neofetch/ascii/dr-robot-ascii"
 neofetch
 
 # Configure emacs and emacsclient
-export EMACS_CLIENT='/usr/local/opt/emacs-mac/bin/emacsclient'
-export EMACS_BIN_DIR="/usr/local/opt/emacs-mac/bin"
+#export EMACS_CLIENT='/usr/local/opt/emacs-mac/bin/emacsclient -nw'
+#export EMACS_CLIENT='/usr/local/opt/emacs-mac/Emacs.app/Contents/MacOS/bin/emacsclient'
+#export EMACS_BIN_DIR="/usr/local/opt/emacs-mac/bin"
 alias te="~/.emacs.d/emacs-client-server.sh"
-export EDITOR='open -a /usr/local/opt/emacs-mac/Emacs.app'
+#export EDITOR='open -a /usr/local/opt/emacs-mac/Emacs.app'
+#export EDITOR="/usr/local/opt/emacs-mac/bin/emacsclient -c -s ~/.emacs.d/server/server"
+#export EMACS_SERVER=$HOME"/.emacs.d/server/server"
+#export EDITOR="/usr/local/opt/emacs-mac/Emacs.app/Contents/MacOS/bin/emacsclient -c -s ~/.emacs.d/server/server"
+#export EDITOR="/usr/local/opt/emacs-mac/Emacs.app/Contents/MacOS/bin/emacsclient -c -s "$EMACS_SERVER
+alias emacsclient='/usr/local/opt/emacs-mac/Emacs.app/Contents/MacOS/bin/emacsclient'
+#alias emacs='/usr/local/opt/emacs-mac/Emacs.app/Contents/MacOS/bin/Emacs'
+alias emacs='/usr/local/opt/emacs-mac/Emacs.app/Contents/MacOS/Emacs.sh'
+#alias emacs='/usr/local/opt/emacs-mac/Emacs.app/Contents/MacOS/Emacs'
+export EDITOR=""
 
 # Functions for restarting and stopiing emacs server for emacsclient
 function emrestart {
