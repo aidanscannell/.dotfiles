@@ -139,20 +139,20 @@ alias emacs='/usr/local/opt/emacs-mac/Emacs.app/Contents/MacOS/Emacs.sh'
 export EDITOR=""
 
 # Functions for restarting and stopiing emacs server for emacsclient
-function emrestart {
-    if pgrep "emacs.*daemon" > /dev/null
-    then
-        echo "killing emacs daemon process"
-        $EMACS_BIN_DIR/emacsclient -e "(kill-emacs)"
-    fi
-    launchctl unload "$HOME/Library/LaunchAgents/emacsserver.plist" &&
-        launchctl load "$HOME/Library/LaunchAgents/emacsserver.plist"
-}
-
-function emstop {
-    if pgrep "emacs.*daemon" > /dev/null
-    then
-        echo "killing emacs daemon process"
-        $EMACS_BIN_DIR/emacsclient -e "(kill-emacs)"
-    fi
-}
+#function emrestart {
+#    if pgrep "emacs.*daemon" > /dev/null
+#    then
+#        echo "killing emacs daemon process"
+#        $EMACS_BIN_DIR/emacsclient -e "(kill-emacs)"
+#    fi
+#    launchctl unload "$HOME/Library/LaunchAgents/emacsserver.plist" &&
+#        launchctl load "$HOME/Library/LaunchAgents/emacsserver.plist"
+#}
+#
+#function emstop {
+#    if pgrep "emacs.*daemon" > /dev/null
+#    then
+#        echo "killing emacs daemon process"
+#        $EMACS_BIN_DIR/emacsclient -e "(kill-emacs)"
+#    fi
+#}
