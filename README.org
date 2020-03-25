@@ -16,7 +16,7 @@ chmod +x symlinks.sh
 ** Mac
 *** Emacs
 
-This file (or document?) is my Spacemacs configuration in literate form
+This file is my Spacemacs configuration in literate form
 
 **** Install (with homebrew)
 Some Emacs installs do not work with yabai tiling window manager or support retina pdf quality in PDFView.
@@ -29,8 +29,12 @@ Link emacs-mac to =/usr/local/bin/emacs=.
 **** pdf quality 
 Emacs/Emacs-plus install and pdf-tools renders low quality pdfs.
 Use emacs-mac and put this in user-config to fix,
-- =(setq pdf-view-use-scaling t)=
-
+#+begin_src emacs-lisp :tangle yes
+  ;; default page width behavior
+  (setq-default pdf-view-display-size 'fit-page)
+  ;; combined with emacs-mac this gives good odf quality for retina display
+  (setq pdf-view-use-scaling t)
+#+end_src
 **** Chemacs
 Emacs profile switcher. Makes it easy to run multiple Emacs configs side by side.
 - =~/.emacs-profile= sets the default config to use,
@@ -360,12 +364,83 @@ conventions.
 ****** Templates
 
 ***** Org-ref
+The BibTeX layer includes the following packages,
+- auctex
+- org
+- org-ref
+- markdown-mode
+- (helm-bibtex :requires helm)
+- biblio
+- biblio-core
+I configured org-ref to use my mendeley .bib file at =~/Dropbox/org/ref/mendeley/library.bib=
 #+begin_src emacs-lisp :tangle yes
   (setq org-ref-bibliography-notes "~/Dropbox/org/ref/notes.org"
-        org-ref-default-bibliography '("~/Dropbox/library.bib") ;; mendeley bibfile
-        org-ref-pdf-directory "~/Dropbox/org/ref/pdfs/") ;; where org-ref saves papers
+        org-ref-default-bibliography '("~/Dropbox/org/ref/mendeley/library.bib") ;; mendeley bibfile
+        ;; TODO org-ref-default-bibliography is where org-ref looks for citations (mendeley bibfile) AND
+        ;; where it writes bib information to e.g. using org-ref-pdf
+        org-ref-pdf-directory "~/Dropbox/org/ref/org-ref-pdfs/") ;; where org-ref saves papers
+#+end_src
+Org-ref provides a convenient function for opening pdfs belonging to mendeley bibtex items.
+Mendely adds the pdf file path to a =file= property in the bibtex entry and org-ref uses this.
+#+begin_src emacs-lisp :tangle yes
+  (setq org-ref-get-pdf-filename-function 'org-ref-get-mendeley-filename)
+#+end_src
+I want to open these pdfs using pdf-tools so that I can view them inside emacs in pdf-view-mode.
+#+begin_src emacs-lisp :tangle yes
+  (defun my/org-ref-open-pdf-at-point ()
+    "Open the pdf for bibtex key under point if it exists."
+    (interactive)
+    (let* ((results (org-ref-get-bibtex-key-and-file))
+           (key (car results))
+           (pdf-file (funcall org-ref-get-pdf-filename-function key)))
+      (if (file-exists-p pdf-file)
+          (find-file pdf-file)
+        (message "No PDF found for %s" key))))
+
+  (setq org-ref-open-pdf-function 'my/org-ref-open-pdf-at-point)
+#+end_src
+This function also sets the org export to LaTeX command =C-c C-e l o= to open in pdf-view-mode.
+
+
+In order to make sure that the bibliography is made when exporting org to latex-pdf,
+#+begin_src emacs-lisp :tangle yes
+  (setq org-latex-pdf-process
+        '("pdflatex -interaction nonstopmode -output-directory %o %f"
+          "bibtex %b"
+          "pdflatex -interaction nonstopmode -output-directory %o %f"
+          "pdflatex -interaction nonstopmode -output-directory %o %f"))
 #+end_src
 
+I chose to use BibLaTeX over BibTeX,
+#+begin_src emacs-lisp :tangle yes
+  (setq bibtex-dialect 'biblatex)
+#+end_src
+which requires the following at the top of the org file,
+#+BEGIN_SRC org
+#+LATEX_HEADER: \usepackage[citestyle=authoryear-icomp,bibstyle=authoryear, hyperref=true,backref=false,maxcitenames=1,url=false,backend=bibtex,natbib=true] {biblatex}
+#+LATEX_HEADER: \addbibresource{~/Dropbox/org/ref/mendeley/library.bib}
+#+END_SRC
+and uses,
+#+BEGIN_SRC org
+\printbibliography
+#+END_SRC
+to generate the bibliography.
+
+
+***** LaTeX
+This section is for creating LaTeX docs outside of org-mode using auctex and reftex, which are built into the spacemacs LaTeX layer.
+
+We want to use pdf-tools to open pdf files from tex,
+#+begin_src emacs-lisp :tangle yes
+  (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+        TeX-source-correlate-start-server t)
+#+end_src
+
+#+begin_src emacs-lisp :tangle yes
+  (setq reftex-default-bibliography '("~/Dropbox/org/ref/mendeley/library.bib"))
+#+end_src
+
+Mention snippets.
 **** Extra
 
 In =~/.config/skhd/skhdrc= create a keyboard shortcut for GUI Emacs,

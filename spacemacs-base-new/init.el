@@ -575,26 +575,34 @@ before packages are loaded."
 
   (server-start)
 
-  ;; combined with emacs-mac this gives good odf quality for retina display
-  (setq pdf-view-use-scaling t)
+
+  ;; Text takes up 85% of the buffer
+  (setq olivetti-body-width 0.85)
+  (setq olivetti-body-width 0.95)
+  ;; Starts text files (like .org .txt .md) in olivetti mode
+  (add-hook 'text-mode-hook 'olivetti-mode)
+
+
+  (custom-set-faces
+   '(company-tooltip-common
+     ((t (:inherit company-tooltip :weight bold :underline nil))))
+   '(company-tooltip-common-selection
+     ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
+
+  ;; (add-hook 'org-mode-hook (lambda ()
+  ;;                            "Beautify Org Checkbox Symbol"
+  ;;                            (push '("[ ]" .  "☐") prettify-symbols-alist)
+  ;;                            (push '("[X]" . "☑" ) prettify-symbols-alist)
+  ;;                            (push '("[-]" . "❍" ) prettify-symbols-alist)
+  ;;                            (prettify-symbols-mode)))
+  ;; (defface org-checkbox-done-text
+  ;;   '((t (:foreground "#71696A")))
+  ;;   "Face for the text part of a checked org-mode checkbox.")
 
   (setq inhibit-startup-screen nil)
 
   ;; (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   ;; (add-to-list 'default-frame-alist '(ns-appearance . light))
-
-  (add-to-list 'load-path "~/.dotfiles/spacemacs-base-new/private/org-reveal")
-  (require 'ox-reveal)
-  ;; (setq org-reveal-root "~/reveal.js")
-  (setq org-reveal-root "https://revealjs.com/")
-  (defun toggle-org-reveal-export-on-save ()
-    (interactive)
-    (if (memq 'org-reveal-export-to-html after-save-hook)
-        (progn
-          (remove-hook 'after-save-hook 'org-reveal-export-to-html t)
-          (message "Disabled org reveal export to html on save for current buffer..."))
-      (add-hook 'after-save-hook 'org-html-export-to-html nil t)
-      (message "Enabled org reveal export to html on save for current buffer...")))
 
   ;; active Babel languages
   (org-babel-do-load-languages
@@ -622,20 +630,56 @@ before packages are loaded."
     (shell-command "hackmyresume build resume_html.json TO ../static/resume.html -t node_modules/jsonresume-theme-stackoverflow")
     )
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; LaTeX bibliography config
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (require 'org-ref)
-  ;; (setq reftex-default-bibliography '("~/Dropbox/library.bib"))
+  ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; ;; LaTeX bibliography config
+  ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; folder where reftex searches for citations
-  (setq reftex-default-bibliography '("~/Dropbox/org/ref/master.bib"))
-  ;; (add-hook 'doc-view-mode-hook 'auto-revert-mode)
+  (setq reftex-default-bibliography '("~/Dropbox/org/ref/mendeley/library.bib"))
+  (setq bibtex-dialect 'biblatex)
+
   (setq org-ref-bibliography-notes "~/Dropbox/org/ref/notes.org"
-        org-ref-default-bibliography '("~/Dropbox/org/ref/master.bib")
-        org-ref-pdf-directory "~/Dropbox/org/ref/pdfs/")
-  (setq org-ref-open-pdf-function
-        (lambda (fpath)
-          (start-process "zathura" "*helm-bibtex-zathura*" "/usr/local/bin/zathura" fpath)))
+        org-ref-default-bibliography '("~/Dropbox/org/ref/mendeley/library.bib") ;; mendeley bibfile
+        ;; TODO org-ref-default-bibliography is where org-ref looks for citations (mendeley bibfile) AND
+        ;; where it writes bib information to e.g. using org-ref-pdf
+        org-ref-pdf-directory "~/Dropbox/org/ref/org-ref-pdfs/") ;; where org-ref saves papers
+
+  ;; enable org-ref to open mendeley pdfs
+  (setq org-ref-get-pdf-filename-function 'org-ref-get-mendeley-filename)
+
+  ;; open pdfs using pdf-tools
+  (defun my/org-ref-open-pdf-at-point ()
+    "Open the pdf for bibtex key under point if it exists."
+    (interactive)
+    (let* ((results (org-ref-get-bibtex-key-and-file))
+           (key (car results))
+           (pdf-file (funcall org-ref-get-pdf-filename-function key)))
+      (if (file-exists-p pdf-file)
+          (find-file pdf-file)
+        (message "No PDF found for %s" key))))
+
+  (setq org-ref-open-pdf-function 'my/org-ref-open-pdf-at-point)
+
+  (setq org-latex-pdf-process
+        '("pdflatex -interaction nonstopmode -output-directory %o %f"
+          "bibtex %b"
+          "pdflatex -interaction nonstopmode -output-directory %o %f"
+          "pdflatex -interaction nonstopmode -output-directory %o %f"))
+
+  ;; use pdf-tools to open pdf files from tex
+  (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+        TeX-source-correlate-start-server t)
+
+  ;; default page width behavior
+  (setq-default pdf-view-display-size 'fit-page)
+  ;; combined with emacs-mac this gives good odf quality for retina display
+  (setq pdf-view-use-scaling t)
+
+  ;; include latex snippets in org mode
+  ;; (add-hook 'org-mode-hook #'latex-mode)
+  ;; (add-hook 'org-mode-hook #'((yas-activate-extra-mode 'latex-mode)))
+  ;; (yas-reload-all)
+  ;; (add-hook 'org-mode-hook '((yas-activate-extra-mode 'latex-mode)))
+
 
   (spacemacs/set-leader-keys
     "ob" 'build-resume
@@ -646,13 +690,6 @@ before packages are loaded."
     "os" 'org-save-all-org-buffers
     "oi" 'helm-org-agenda-files-headings)
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; Display Visited File's Path in the Frame Title
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; (setq frame-title-format
-  ;;       '((:eval (if (buffer-file-name)
-  ;;                    (abbreviate-file-name (buffer-file-name))
-  ;;                  "%b"))))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -667,15 +704,34 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(evil-want-Y-yank-to-eol nil)
+ '(hl-todo-keyword-faces
+   (quote
+    (("TODO" . "#dc752f")
+     ("NEXT" . "#dc752f")
+     ("THEM" . "#2d9574")
+     ("PROG" . "#4f97d7")
+     ("OKAY" . "#4f97d7")
+     ("DONT" . "#f2241f")
+     ("FAIL" . "#f2241f")
+     ("DONE" . "#86dc2f")
+     ("NOTE" . "#b1951d")
+     ("KLUDGE" . "#b1951d")
+     ("HACK" . "#b1951d")
+     ("TEMP" . "#b1951d")
+     ("FIXME" . "#dc752f")
+     ("XXX+" . "#dc752f")
+     ("\\?\\?\\?+" . "#dc752f"))))
  '(package-selected-packages
    (quote
-    (tide typescript-mode tern rjsx-mode js2-mode js-doc import-js grizzl symon spaceline-all-the-icons all-the-icons memoize spaceline powerline fancy-battery font-lock+ popwin hl-todo fill-column-indicator nyan-mode mmm-mode markdown-toc gh-md web-mode web-beautify tagedit slim-mode scss-mode sass-mode pug-mode prettier-js impatient-mode simple-httpd helm-css-scss haml-mode emmet-mode counsel-css counsel swiper company-web web-completion-data add-node-modules-path org-ref key-chord ivy helm-bibtex parsebib company-reftex company-auctex biblio biblio-core auctex-latexmk auctex toc-org pdf-tools tablist orgit org-projectile org-category-capture org-pomodoro alert log4e gntp org-mime org-download org-cliplink org-bullets htmlize helm-org-rifle helm-org gnuplot evil-org org-plus-contrib xterm-color vterm terminal-here shell-pop multi-term eshell-z eshell-prompt-extras esh-help rainbow-mode rainbow-identifiers color-identifiers-mode yapfify pytest pyenv-mode py-isort pippel pipenv pyvenv pip-requirements lsp-ui lsp-python-ms live-py-mode importmagic epc ctable concurrent deferred helm-pydoc helm-lsp dap-mode lsp-treemacs bui cython-mode company-lsp lsp-mode markdown-mode spinner dash-functional company-anaconda blacken anaconda-mode pythonic treemacs-persp persp-mode eyebrowse treemacs-magit lv smeargle magit-svn magit-section magit-gitflow magit-popup helm-gitignore request helm-git-grep gitignore-templates gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit git-gutter-fringe+ fringe-helper git-gutter+ git-commit with-editor transient browse-at-remote which-key vi-tilde-fringe use-package treemacs-projectile treemacs-evil pcre2el overseer nameless macrostep hybrid-mode helm-xref helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-ls-git helm-flx helm-descbinds helm-ag flycheck-package flycheck-elsa evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu elisp-slime-nav dotenv-mode diminish auto-compile ace-jump-helm-line))))
+    (zotelo yapfify xterm-color ws-butler which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toc-org tagedit smeargle slim-mode shell-pop scss-mode sass-mode reveal-in-osx-finder rainbow-mode rainbow-identifiers rainbow-delimiters pyvenv pytest pyenv-mode py-isort pug-mode pip-requirements persp-mode pcre2el pbcopy osx-trash osx-dictionary orgit org-ref pdf-tools key-chord ivy tablist org-projectile org-category-capture org-pomodoro alert log4e gntp org-plus-contrib org-mime org-download org-bullets multi-term move-text mmm-mode markdown-toc markdown-mode magit-gitflow magit-popup macrostep lorem-ipsum livid-mode skewer-mode simple-httpd live-py-mode linum-relative link-hint launchctl json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc indent-guide hydra lv hy-mode hungry-delete htmlize highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-pydoc helm-projectile projectile helm-mode-manager helm-make helm-gitignore request helm-flx flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-bibtex parsebib helm-ag haml-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip flycheck pkg-info epl eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit magit git-commit with-editor transient evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu eshell-z eshell-prompt-extras esh-help emmet-mode elisp-slime-nav diminish deft cython-mode company-web web-completion-data company-tern dash-functional tern company-statistics company-quickhelp pos-tip company-auctex company-anaconda company column-enforce-mode color-identifiers-mode coffee-mode clean-aindent-mode bind-map bind-key biblio biblio-core auto-yasnippet yasnippet auto-highlight-symbol auto-dictionary auto-compile packed auctex-latexmk auctex anaconda-mode pythonic f dash s aggressive-indent adaptive-wrap ace-window ace-jump-helm-line helm avy helm-core async ac-ispell auto-complete popup))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
 )
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
