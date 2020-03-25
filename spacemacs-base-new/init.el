@@ -51,15 +51,11 @@ This function should only modify configuration layer settings."
                       auto-completion-tab-key-behavior 'cycle
                       auto-completion-private-snippets-directory (concat dotspacemacs-directory "/private/snippets")
                       auto-completion-enable-snippets-in-popup t)
-     ;; (spell-checking :variables
-     ;;                 random               enable-flyspell-auto-completion t) ;; enabling this layer causes spacemacs to sometime freeze
-     spell-checking
      (syntax-checking :variables
                       syntax-checking-enable-by-default t)
-     osx
-
-     git
-     ;; version-control
+     spell-checking
+     ;; (spell-checking :variables
+     ;;                 random               enable-flyspell-auto-completion t) ;; enabling this layer causes spacemacs to sometime freeze
 
      ;; shell config
      (shell :variables
