@@ -62,15 +62,17 @@
 
 
     ;; Org mode settings
-    (setq org-directory "/Users/aidanscannell/Dropbox/org/"
+    (setq org-directory "~/Dropbox/org/"
           org-default-notes-file "~/Dropbox/org/notes.org"
           org-contacts-files '("~/Dropbox/org/contacts.org")
-          org-todo-keywords '((sequence "SOMEDAY" "TODO" "PROGRESS" "|"
+          org-todo-keywords '((sequence "TODO" "SOMEDAY" "PROGRESS" "|"
                       "DONE" "DELEGATED" "CANCELLED"))
           ;; org-bullets-bullet-list '("■" "◆" "▲" "▶")
           org-startup-indented t ;; Keep the indentation well structured
-          org-agenda-files '("/Users/aidanscannell/Dropbox/org/agenda") ;; set the agenda files.
-          org-agenda-files '("/Users/aidanscannell/Dropbox/org/"))
+          org-agenda-files '("~/Dropbox/org/agenda/routine.org"
+                             "~/Dropbox/org/1.todo.org"
+                             "~/Dropbox/org/agenda/calendar.org"
+                             "~/Dropbox/org/agenda/uni.org")) ;; set the agenda files.
 
     ;; add the per project todo.org files to the agenda
     (with-eval-after-load 'org-agenda
@@ -160,8 +162,19 @@
           ;; ("p" "Pick a file" entry (file+function "~/Dropbox/org/notes/ideas.org" org-ask-location))
           ("n" "Note" entry (file "~/Dropbox/org/notes.org"), "** %^{Note...}")
 
-          ;; ("t" "To-do" entry (file+headline "~/Dropbox/org/inbox.org" "Tasks")
+          ;; ("t" "To" entry (file+headline "~/Dropbox/org/inbox.org" "Tasks")
           ;; "** TODO %^{Task Description}\nCreated From: %a\n" :clock-in t :clock-resume t :prepend t)
+          ("t" "Todo" entry (file+headline "~/Dropbox/org/1.todo.org" "General TODOs")
+           "* TODO %?\n%U" :empty-lines 1)
+
+          ("P" "PhD Todo" entry (file+headline "~/Dropbox/org/1.todo.org" "PhD TODOs")
+           "* TODO %?\n%U" :empty-lines 1)
+
+          ("s" "Spacemacs Todo" entry (file+headline "~/Dropbox/org/1.todo.org" "Spacemacs TODOs")
+           "* TODO %?\n%U" :empty-lines 1)
+
+          ("C" "PC Todo" entry (file+headline "~/Dropbox/org/1.todo.org" "PC TODOs")
+           "* TODO %?\n%U")
 
           ;; ("l" "Link" "* TODO %a %? %^G\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n")
           )
